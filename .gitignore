@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Original notebook (Kaggle work)
+notebook3e51d5c2df.ipynb
+
+# Local data directories
+data/
+
+# Model weights
+amazon_resnet50_v1.pth
+
+# Temporary inspection files
+inspect_nb.py
+inspect_outputs.py
+create_notebook.py
+notebook_flat.py
