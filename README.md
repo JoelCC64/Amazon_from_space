@@ -24,12 +24,24 @@ Amazon_from_space/
     └── utils.py                       # Visualization and inference helper functions
 ```
 
-### Module Descriptions:
-1. **`src/config.py`**: To manage paths dynamically. To default to the Kaggle environment path `/kaggle/input/...` if detected, otherwise falling back to configurable local paths. It centralizes constants such as `BATCH_SIZE = 32`, `LEARNING_RATE = 1e-3`, and `NUM_CLASSES = 17`.
-2. **`src/dataset.py`**: To build the data pipeline via `AmazonDataset` (inheriting from `torch.utils.data.Dataset`), to manage image transformations (Resize to 224x224, ImageNet normalization), and to handle multi-label One-Hot encoding.
-3. **`src/model.py`**: To define the `AmazonResnet` class, based on a ResNet50 model with pre-trained weights (`ResNet50_Weights.DEFAULT`). It allows freezing the feature extractor (`freeze_backbone=True`) and replaces the final linear layer for 17 classes.
-4. **`src/train.py`**: To implement the training and validation loops. It evaluates the **F1-Score** using a `samples` average and a decision threshold of 0.5.
-5. **`src/utils.py`**: To encapsulate helper functions for plotting satellite images using matplotlib and executing inference on test samples.
+### Pipeline Flow
+
+```mermaid
+flowchart LR
+    A[Satellite Images<br/>+ multi-label CSV] --> B[AmazonDataset<br/>resize 224x224 · ImageNet norm]
+    B --> C[One-Hot Encoding<br/>17 classes]
+    C --> D[AmazonResnet<br/>ResNet50 backbone]
+    D --> E[Training loop<br/>BCEWithLogitsLoss · Adam]
+    E --> F[Validation<br/>F1-score @ 0.5]
+    F --> G[Inference<br/>multi-label predictions]
+```
+
+### Module Descriptions
+1. **`src/config.py`** — Manages path configuration dynamically, defaulting to the Kaggle environment path (`/kaggle/input/...`) when detected and falling back to configurable local paths otherwise. Centralises hyperparameters such as `BATCH_SIZE = 32`, `LEARNING_RATE = 1e-3`, and `NUM_CLASSES = 17`.
+2. **`src/dataset.py`** — Builds the data pipeline through the `AmazonDataset` class (a subclass of `torch.utils.data.Dataset`), applies image transformations (resize to 224×224, ImageNet normalisation), and encodes labels using a multi-label one-hot representation.
+3. **`src/model.py`** — Defines the `AmazonResnet` class, built on a ResNet50 backbone with pre-trained weights (`ResNet50_Weights.DEFAULT`). Supports freezing the feature extractor (`freeze_backbone=True`) and replaces the final fully connected layer to output 17 classes.
+4. **`src/train.py`** — Implements the training and validation loops, evaluating the **F1-score** with a `samples` average and a 0.5 decision threshold.
+5. **`src/utils.py`** — Provides helper functions for visualising satellite imagery with matplotlib and running inference on test samples.
 
 ---
 
